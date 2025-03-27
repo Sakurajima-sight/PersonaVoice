@@ -1,0 +1,26 @@
+# 忽略所有音频文件
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+*.m4a
+*.wma
+*.aiff
+*.alac
+
+# 忽略所有视频文件
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mpeg
+*.mpg
+*.3gp
+*.ts
+*.m4v
+
+workspace/
