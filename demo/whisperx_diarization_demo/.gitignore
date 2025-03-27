@@ -1,0 +1,4 @@
+path/
+diar_segments_whisperx/
+*.wav
+.env
