@@ -14,7 +14,7 @@ import pyjson5
 
 
 # ------------------ 模型推理 ------------------
-SUPPORTED_LANG_CODES = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt"]
+SUPPORTED_LANG_CODES = ["en", "fr", "de", "es", "it", "ja", "zh", "nl", "uk", "pt", "yue"]
 
 def run_whisperx_pipeline(audio_file, language_code, whisper_model, device, output_dir,
                           tf32, gpu_mem_fraction, batch_size, compute_type):
@@ -26,7 +26,7 @@ def run_whisperx_pipeline(audio_file, language_code, whisper_model, device, outp
     os.makedirs(output_dir, exist_ok=True)
 
     print("🔁 加载 WhisperX 模型...")
-    model = whisperx.load_model(whisper_model, device, compute_type=compute_type, download_root="./path")
+    model = whisperx.load_model(whisper_model, device, language=language_code, compute_type=compute_type, download_root="./path")
     audio = whisperx.load_audio(audio_file)
     result = model.transcribe(audio, batch_size=batch_size)
     del model; gc.collect(); torch.cuda.empty_cache()

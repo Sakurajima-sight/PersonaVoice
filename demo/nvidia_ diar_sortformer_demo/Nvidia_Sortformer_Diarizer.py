@@ -186,11 +186,22 @@ def main():
     parser.add_argument("--output_dir", default="./diar_segments_NeMo", help="输出目录（默认目录）")
     parser.add_argument("--top_k_speakers", type=int, default=None, help="导出说话时长最多的前 K 个说话人（默认全部导出）")
     parser.add_argument("--max_threads", type=int, default=4, help="并发提取音频时的线程数（默认 4）")
-    parser.add_argument("--batch_size", type=int, default=4, help="批次大小（默认 1）")
+    parser.add_argument("--batch_size", type=int, default=1, help="批次大小（默认 1）")
 
     args = parser.parse_args()
 
-    audio_path = args.audio_file
+    probe = ffmpeg.probe(args.audio_file, v='error', select_streams='a:0', show_entries='stream=channels')
+    channels = probe['streams'][0]['channels']
+
+    if channels == 2:
+        print(f"音频 {args.audio_file} 是双通道，正在转换为单通道...")
+        output_file = os.path.splitext(args.audio_file)[0] + "_mono.wav"
+        ffmpeg.input(args.audio_file).output(output_file, ac=1).run(overwrite_output=True, capture_stdout=True, capture_stderr=True)
+        print(f"转换完成，已覆盖原文件 {args.audio_file}")
+    else:
+        output_file = args.audio_file
+
+    audio_path = output_file
     max_segment_duration = args.max_segment_duration
     output_csv = os.path.join(args.output_dir, "nvidia_diarization_results.csv")
 
